@@ -5,9 +5,6 @@
 #include <string.h>
 #include <math.h>
 
-//----------------------------------------------------------------------------------
-// Some Defines
-//----------------------------------------------------------------------------------
 #define STD_SIZE_X 30 // largura do jogador
 #define STD_SIZE_Y 30 // altura do jogador
 #define STD_SIZE_BOMB_X 20 // largura da bomba
@@ -21,6 +18,7 @@ typedef struct Power{
     int aumentar_bomba;
     int explosao_bomba;
 }Power;
+
 typedef struct Bomb{
     Rectangle pos; // posicionamento da bomba
     Rectangle explosion_right; // aumento da bomba para direita
@@ -75,9 +73,9 @@ typedef struct Game {
     int start;
 } Game;
 
-//------------------------------------------------------------------------------------
-// Module Functions Declaration (local)
-//------------------------------------------------------------------------------------
+/**
+* Funções Modulares
+**/
 void InitGame(Game *g);         // Initialize game
 void UpdateGame(Game *g);       // Update game (one frame)
 void DrawGame(Game *g);         // Draw game (one frame)
@@ -99,9 +97,9 @@ int checkP1bombsColl(Game *g);
 int checkBombsColl(Game *g, Rectangle target, int playerID);
 int checkP2bombsColl(Game *g);
 
-//------------------------------------------------------------------------------------
-// Program main entry point
-//------------------------------------------------------------------------------------
+/**
+* Main do programa
+**/
 int main(void)
 {
     srand(time(NULL));
@@ -275,38 +273,39 @@ void draw_borders(Game *g)
 {
     DrawRectangle(0, 0, SCREEN_BORDER, g->screenHeight, BLACK);
     DrawRectangle(0, 0, g->screenWidth, SCREEN_BORDER, BLACK);
-    DrawRectangle(g->screenWidth-SCREEN_BORDER, 0, g->screenWidth, g->screenHeight, BLACK);
-    DrawRectangle(0, g->screenHeight-SCREEN_BORDER, g->screenWidth, g->screenHeight, BLACK);
+    DrawRectangle(g->screenWidth-SCREEN_BORDER-110, 0, g->screenWidth, g->screenHeight, BLACK);
+    DrawRectangle(0, g->screenHeight-SCREEN_BORDER+30, g->screenWidth, g->screenHeight, BLACK);
 }
 
+/**
+ * Desenha as barreiras, objetos destrutíveis e itens de superpoderes do mapa
+*/
 void draw_map(Game *g){
     Map *map = &g->maps[g->curr_map];
+    
+    /* Colocar os sprites por cima desses itens */
     for(int i = 0; i < map->num_barriers; i++){
         DrawRectangleRec(map->barriers[i], BLACK);
     }
     for(int i = 0; i < map->num_destrutivas; i++){
         DrawRectangleRec(map->destrutivas[i], GREEN);
-
     }
-   
     for(int i = 0; i < map->num_poder; i++){
-       
-           DrawRectangleRec(map->velocidade[i], BLUE); 
-         
-            DrawRectangleRec(map->explosao[i], ORANGE);
-        
-            DrawRectangleRec(map->num_bombas[i], PURPLE);
-       
-        
-       
-        
+        DrawRectangleRec(map->velocidade[i], BLUE); 
+        DrawRectangleRec(map->explosao[i], ORANGE);
+        DrawRectangleRec(map->num_bombas[i], PURPLE);
     }
 }
 
+/**
+ * Desenha a bomba e a sua área de explosão
+*/
 void draw_bomb(Game *g){
     for(int i = 0; i < g->hero.num_bombs; i++){
         if(g->hero.bombs[i].isActive == 1){
+            /* Aproveitar dessa primeira função para colocar o srprite da bomba */
             DrawRectangleRec(g->hero.bombs[i].pos, RED);
+
             DrawRectangleRec(g->hero.bombs[i].explosion_right, RED);
             DrawRectangleRec(g->hero.bombs[i].explosion_left, RED);
             DrawRectangleRec(g->hero.bombs[i].explosion_up, RED);
@@ -315,7 +314,9 @@ void draw_bomb(Game *g){
     }
     for(int i = 0; i < g->hero2.num_bombs; i++){
         if(g->hero2.bombs[i].isActive == 1){
+            /* Aproveitar dessa primeira função para colocar o srprite da bomba */
             DrawRectangleRec(g->hero2.bombs[i].pos, RED);
+            
             DrawRectangleRec(g->hero2.bombs[i].explosion_right, RED);
             DrawRectangleRec(g->hero2.bombs[i].explosion_left, RED);
             DrawRectangleRec(g->hero2.bombs[i].explosion_up, RED);
@@ -411,7 +412,7 @@ void update_hero_pos(Game *g){
       
         
     }  else if(IsKeyDown(KEY_S)) {
-        if(h->pos.y + h->pos.height < g->screenHeight - SCREEN_BORDER)
+        if(h->pos.y + h->pos.height < g->screenHeight+30 - SCREEN_BORDER)
             h->pos.y += h->speed;
         if(barrier_collision(m, h->pos) || CheckCollisionRecs(h->pos, h2->pos)) 
             h->pos.y -= h->speed;
@@ -515,7 +516,7 @@ void update_hero_pos(Game *g){
         }
 
     } else if(IsKeyDown(KEY_DOWN)) {
-        if(h2->pos.y + h2->pos.height < g->screenHeight - SCREEN_BORDER)
+        if(h2->pos.y + h2->pos.height < g->screenHeight - SCREEN_BORDER+30)
             h2->pos.y += h2->speed;
         if(barrier_collision(m2, h2->pos) || CheckCollisionRecs(h->pos, h2->pos)) 
             h2->pos.y -= h2->speed;
@@ -1094,37 +1095,33 @@ int barrier_collision(Map *map, Rectangle target){
 // Maps Setup
 void map0_setup(Game *g){
     g->maps[0].num_borders = 10;
-    g->maps[0].borders[0] = (Rectangle) {0, 0, SCREEN_BORDER, g->screenHeight};
+    g->maps[0].borders[0] = (Rectangle) {0, 0, SCREEN_BORDER+60, g->screenHeight};
     g->maps[0].borders[1] = (Rectangle) {0, 0, g->screenWidth, SCREEN_BORDER};
-    g->maps[0].borders[2] = (Rectangle) {0, g->screenHeight-SCREEN_BORDER, g->screenWidth, g->screenHeight};
-    g->maps[0].borders[3] = (Rectangle) {g->screenWidth-SCREEN_BORDER, 0, g->screenWidth, g->screenHeight};
+    g->maps[0].borders[2] = (Rectangle) {0, g->screenHeight+30-SCREEN_BORDER+30, g->screenWidth, g->screenHeight};
+    g->maps[0].borders[3] = (Rectangle) {g->screenWidth-SCREEN_BORDER-110, 0, g->screenWidth, g->screenHeight};
     g->maps[0].num_barriers = 100;
     g->maps[0].num_destrutivas = 100;
     g->maps[0].num_poder = 100;
    int posy = 150;
+for (int i = 0; i < 6; i++) {
+    int posx = 210;
 
-    for(int i = 0; i < 4; i++){
-        int posx = 120;
+    for (int j = 0; j < 6; j++) {
+        g->maps[0].barriers[i * 6 + j] = (Rectangle) { posx, posy, STD_SIZE_X, STD_SIZE_Y };
 
-        for(int j = 0; j < 7; j++){
-            g->maps[0].barriers[i *7 + j] = (Rectangle) { posx, posy, STD_SIZE_X, STD_SIZE_Y};
-            if( j < 6){
-            g->maps[0].destrutivas[i * 7 + j] = (Rectangle) { posx+30, posy, STD_SIZE_X, STD_SIZE_Y};
-            g->maps[0].destrutivas[i * 7 + j+35] = (Rectangle) { posx+60, posy, STD_SIZE_X, STD_SIZE_Y};   
-            }
-               
-
-            posx += STD_SIZE_X + 60;  // Ajuste de espaçamento
+        if (j == 5) {
+            // Bloco destrutivo no final da linha
+            g->maps[0].destrutivas[i * 6 + j] = (Rectangle) { 0, 0, 0, 0 };  // Substitua os valores pelos desejados
+        } else {
+            // Bloco indestrutivo
+            g->maps[0].destrutivas[i * 6 + j] = (Rectangle) { posx + 30, posy, STD_SIZE_X, STD_SIZE_Y };
         }
 
-        posy += STD_SIZE_Y + 60;  // Ajuste de espaçamento
+        posx += STD_SIZE_X + 30;  // Ajuste de espaçamento
     }
-    
-   
- 
-        
-   
-     
+
+    posy += STD_SIZE_Y + 30;  // Ajuste de espaçamento
+}
     g->maps[0].color = GRAY;
     g->maps[0].prev_map = -1;
     g->maps[0].next_map = 1;
