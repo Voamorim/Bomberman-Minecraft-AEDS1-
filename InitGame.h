@@ -120,4 +120,3 @@ void initRevanche(Game *g);
 void initial_screen(Game *g, int *aux, Sound click);
 
 #endif
-#endif
