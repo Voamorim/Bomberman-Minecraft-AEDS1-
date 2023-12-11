@@ -40,6 +40,13 @@ void InitGame(Game *g){
     g->hero.vitorias = 0;
     g->hero2.vitorias = 0;
     
+    for(int i = 0; i < g->hero.num_bombs; i++){
+        g->hero.bombs[i].dono_saiu = 0;
+    }
+    for(int i = 0; i < g->hero2.num_bombs; i++){
+        g->hero2.bombs[i].dono_saiu = 0;
+    }
+
     g->hero2.pos = (Rectangle) { 549, 490, 20, 20};
     g->hero2.color = PINK;
     g->hero2.speed = 3;
@@ -198,3 +205,4 @@ void initial_screen(Game *g, int *aux, Sound click){
     }
     EndDrawing();
 }
+
