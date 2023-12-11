@@ -22,6 +22,7 @@ typedef struct Bomb{
     Rectangle explosion_up; 
     Rectangle explosion_down; 
     int isActive;
+    int dono_saiu;
     double distance;
     int time;
 }Bomb;
@@ -118,4 +119,5 @@ void initRevanche(Game *g);
 */
 void initial_screen(Game *g, int *aux, Sound click);
 
+#endif
 #endif
