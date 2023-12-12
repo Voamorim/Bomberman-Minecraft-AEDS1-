@@ -19,6 +19,19 @@ void update_hero_pos(Game *g);
 */
 void update_bomb(Game *g, Sound tnt_sound);
 
+/**
+ * Atualiza o jogo como um todo
+*/
 void UpdateGame(Game *g, Sound tnt_sound);
+
+/**
+ * Checa se o jogador está em cima de um bloco especial
+*/
+void checkMap2Specials(Game *g);
+
+/**
+ * Checa se o jogador está em cima de um bloco especial
+*/
+void checkMap1Specials(Game *g);
 
 #endif
