@@ -21,6 +21,7 @@ void InitGame(Game *g){
     g->hero.pos = (Rectangle) { 180, 120, 20, 20};
     g->hero.color = BLACK;
     g->hero.speed = 3;
+    g->hero.aux_speed = g->hero.speed;
     g->hero.special = 0;
     g->gameover = 0;
     g->hero.num_bombs = 1;
@@ -28,12 +29,12 @@ void InitGame(Game *g){
     g->hero.draw_bomb = 0;
     g->aux = 0;
 
-    if(g->curr_map == 1){
-        g->maps[1].slow_speed[0] = (Rectangle) {330, 300, 90, 30};
-        g->maps[1].slow_speed[1] = (Rectangle) {539, 150, 30, 90};
-        g->maps[1].insta_death[0] = (Rectangle) {299, 210, 30, 30};
-        g->maps[1].insta_death[1] = (Rectangle) {359, 390, 30, 30};
-    }
+    g->maps[1].slow_speed[0] = (Rectangle) {330, 300, 90, 30};
+    g->maps[1].slow_speed[1] = (Rectangle) {539, 150, 30, 90};
+    g->maps[1].insta_death[0] = (Rectangle) {299, 210, 30, 30};
+    g->maps[1].insta_death[1] = (Rectangle) {359, 390, 30, 30};
+    g->maps[0].teleport[0] = (Rectangle) {180, 390, 30, 30};
+    g->maps[0].teleport[1] = (Rectangle) {540, 240, 30, 30};
 
     g->hero.isAlive = 1;
     g->hero2.isAlive = 1;
@@ -42,14 +43,17 @@ void InitGame(Game *g){
     
     for(int i = 0; i < g->hero.num_bombs; i++){
         g->hero.bombs[i].dono_saiu = 0;
+        g->hero.bombs[i].adversario_saiu = 0;
     }
     for(int i = 0; i < g->hero2.num_bombs; i++){
         g->hero2.bombs[i].dono_saiu = 0;
+        g->hero2.bombs[i].adversario_saiu = 0;
     }
 
     g->hero2.pos = (Rectangle) { 549, 490, 20, 20};
     g->hero2.color = PINK;
     g->hero2.speed = 3;
+    g->hero2.aux_speed = g->hero2.speed;
     g->hero2.special = 0;
     g->hero2.num_bombs = 1;
     g->hero2.put_bomb = 0;
@@ -130,17 +134,26 @@ void initRevanche(Game *g){
     g->hero.isAlive = 1;
     g->hero2.isAlive = 1;
 
+    for(int i = 0; i < g->hero.num_bombs; i++){
+        g->hero.bombs[i].dono_saiu = 0;
+        g->hero.bombs[i].adversario_saiu = 0;
+    }
+    for(int i = 0; i < g->hero2.num_bombs; i++){
+        g->hero2.bombs[i].dono_saiu = 0;
+        g->hero2.bombs[i].adversario_saiu = 0;
+    }
+
     if(g->curr_map == 1){
         g->curr_map = 0;
     } else {
         g->curr_map = 1;
     }
-    if(g->curr_map == 1){
-        g->maps[1].slow_speed[0] = (Rectangle) {330, 300, 90, 30};
-        g->maps[1].slow_speed[1] = (Rectangle) {539, 150, 30, 90};
-        g->maps[1].insta_death[0] = (Rectangle) {299, 210, 30, 30};
-        g->maps[1].insta_death[1] = (Rectangle) {359, 390, 30, 30};
-    }
+    g->maps[1].slow_speed[0] = (Rectangle) {330, 300, 90, 30};
+    g->maps[1].slow_speed[1] = (Rectangle) {539, 150, 30, 90};
+    g->maps[1].insta_death[0] = (Rectangle) {299, 210, 30, 30};
+    g->maps[1].insta_death[1] = (Rectangle) {359, 390, 30, 30};
+    g->maps[0].teleport[0] = (Rectangle) {180, 390, 30, 30};
+    g->maps[0].teleport[1] = (Rectangle) {540, 240, 30, 30};
 }
 
 void initial_screen(Game *g, int *aux, Sound click){
@@ -205,4 +218,3 @@ void initial_screen(Game *g, int *aux, Sound click){
     }
     EndDrawing();
 }
-
