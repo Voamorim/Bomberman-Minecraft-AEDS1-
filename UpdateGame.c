@@ -42,9 +42,11 @@ void update_hero_pos(Game *g){
     
     
     if(IsKeyDown(KEY_A)) {
+        /* Verifica se o comando do jogador se movimentar pode ser executado */
         if(h->pos.x > SCREEN_BORDER && g->countdown_value > 0)
             h->pos.x -= h->speed;
 
+        /* Faz a colisão dos jogadores com as bombas */
         for(int i = 0; i < g->hero.num_bombs; i++){
             if(g->hero.bombs[i].isActive == 1){
                 if(!CheckCollisionRecs(g->hero.pos, g->hero.bombs[i].pos)){
@@ -57,17 +59,19 @@ void update_hero_pos(Game *g){
                 }
             }
         }  
-        
         for(int i = 0; i < g->hero2.num_bombs; i++){
             if(g->hero2.bombs[i].isActive == 1){
-                if(fabs(g->hero2.bombs[i].time - GetTime()) < 3){
+                if(!CheckCollisionRecs(g->hero.pos, g->hero2.bombs[i].pos)){
+                    g->hero2.bombs[i].adversario_saiu = 1;
+                }
+                if(fabs(g->hero2.bombs[i].time - GetTime()) < 3 && g->hero2.bombs[i].adversario_saiu){
                     if(CheckCollisionRecs(g->hero.pos, g->hero2.bombs[i].pos)){
                         g->hero.pos.x += h->speed;
                     }
                 }
             }
         }
-
+        /* Verifica se o jogador pegou algum poder */
         if(barrier_collision(m, h->pos))
             h->pos.x += h->speed;
         for(int i = 0; i < g->maps[g->curr_map].num_poder; i++){   
@@ -85,6 +89,9 @@ void update_hero_pos(Game *g){
                 g->maps[g->curr_map].num_bombas[i] = (Rectangle) {0, 0, 0,0};
             }
         }
+
+        /* O mesmo padrão se repete para todas as letras do teclado e seu respectivo movimento na tela */
+
     } else if(IsKeyDown(KEY_D)) {
         if(h->pos.x + h->pos.width < g->screenWidth - SCREEN_BORDER && g->countdown_value > 0)
             h->pos.x += h->speed;
@@ -104,7 +111,10 @@ void update_hero_pos(Game *g){
         
         for(int i = 0; i < g->hero2.num_bombs; i++){
             if(g->hero2.bombs[i].isActive == 1){
-                if(fabs(g->hero2.bombs[i].time - GetTime()) < 3){
+                if(!CheckCollisionRecs(g->hero.pos, g->hero2.bombs[i].pos)){
+                    g->hero2.bombs[i].adversario_saiu = 1;
+                }
+                if(fabs(g->hero2.bombs[i].time - GetTime()) < 3 && g->hero2.bombs[i].adversario_saiu){
                     if(CheckCollisionRecs(g->hero.pos, g->hero2.bombs[i].pos)){
                         g->hero.pos.x -= h->speed;
                     }
@@ -148,7 +158,10 @@ void update_hero_pos(Game *g){
         
         for(int i = 0; i < g->hero2.num_bombs; i++){
             if(g->hero2.bombs[i].isActive == 1){
-                if(fabs(g->hero2.bombs[i].time - GetTime()) < 3){
+                if(!CheckCollisionRecs(g->hero.pos, g->hero2.bombs[i].pos)){
+                    g->hero2.bombs[i].adversario_saiu = 1;
+                }
+                if(fabs(g->hero2.bombs[i].time - GetTime()) < 3 && g->hero2.bombs[i].adversario_saiu){
                     if(CheckCollisionRecs(g->hero.pos, g->hero2.bombs[i].pos)){
                         g->hero.pos.y += h->speed;
                     }
@@ -192,7 +205,10 @@ void update_hero_pos(Game *g){
         
         for(int i = 0; i < g->hero2.num_bombs; i++){
             if(g->hero2.bombs[i].isActive == 1){
-                if(fabs(g->hero2.bombs[i].time - GetTime()) < 3){
+                if(!CheckCollisionRecs(g->hero.pos, g->hero2.bombs[i].pos)){
+                    g->hero2.bombs[i].adversario_saiu = 1;
+                }
+                if(fabs(g->hero2.bombs[i].time - GetTime()) < 3 && g->hero2.bombs[i].adversario_saiu){
                     if(CheckCollisionRecs(g->hero.pos, g->hero2.bombs[i].pos)){
                         g->hero.pos.y -= h->speed;
                     }
@@ -237,7 +253,10 @@ void update_hero_pos(Game *g){
         
         for(int i = 0; i < g->hero.num_bombs; i++){
             if(g->hero.bombs[i].isActive == 1){
-                if(fabs(g->hero.bombs[i].time - GetTime()) < 3){
+                if(!CheckCollisionRecs(g->hero2.pos, g->hero.bombs[i].pos)){
+                    g->hero.bombs[i].adversario_saiu = 1;
+                }
+                if(fabs(g->hero.bombs[i].time - GetTime()) < 3 && g->hero.bombs[i].adversario_saiu){
                     if(CheckCollisionRecs(g->hero2.pos, g->hero.bombs[i].pos)){
                         g->hero2.pos.x += h2->speed;
                     }
@@ -249,7 +268,7 @@ void update_hero_pos(Game *g){
             h2->pos.x += h2->speed;
         for(int i = 0; i < g->maps[g->curr_map].num_poder; i++){
             if((CheckCollisionRecs(g->hero2.pos,g->maps[g->curr_map].velocidade[i]))){
-                g->hero.speed++;
+                g->hero2.speed++;
                 g->maps[g->curr_map].velocidade[i] = (Rectangle) {0, 0, 0,0};
             } else if ((CheckCollisionRecs(g->hero2.pos, g->maps[g->curr_map].explosao[i]))){
                 for(int j = 0; j < g->hero2.num_bombs; j++){
@@ -281,7 +300,10 @@ void update_hero_pos(Game *g){
         
         for(int i = 0; i < g->hero.num_bombs; i++){
             if(g->hero.bombs[i].isActive == 1){
-                if(fabs(g->hero.bombs[i].time - GetTime()) < 3){
+                if(!CheckCollisionRecs(g->hero2.pos, g->hero.bombs[i].pos)){
+                    g->hero.bombs[i].adversario_saiu = 1;
+                }
+                if(fabs(g->hero.bombs[i].time - GetTime()) < 3 && g->hero.bombs[i].adversario_saiu){
                     if(CheckCollisionRecs(g->hero2.pos, g->hero.bombs[i].pos)){
                         g->hero2.pos.x -= h2->speed;
                     }
@@ -293,7 +315,7 @@ void update_hero_pos(Game *g){
             h2->pos.x -= h2->speed;
         for(int i = 0; i < g->maps[g->curr_map].num_poder; i++){   
             if((CheckCollisionRecs(g->hero2.pos,g->maps[g->curr_map].velocidade[i]))){
-                g->hero.speed++;
+                g->hero2.speed++;
             g->maps[g->curr_map].velocidade[i] = (Rectangle) {0, 0, 0,0};
             } else if ((CheckCollisionRecs(g->hero2.pos, g->maps[g->curr_map].explosao[i]))){
                 for(int j = 0; j < g->hero2.num_bombs; j++){
@@ -325,7 +347,10 @@ void update_hero_pos(Game *g){
         
         for(int i = 0; i < g->hero.num_bombs; i++){
             if(g->hero.bombs[i].isActive == 1){
-                if(fabs(g->hero.bombs[i].time - GetTime()) < 3){
+                if(!CheckCollisionRecs(g->hero2.pos, g->hero.bombs[i].pos)){
+                    g->hero.bombs[i].adversario_saiu = 1;
+                }
+                if(fabs(g->hero.bombs[i].time - GetTime()) < 3 && g->hero.bombs[i].adversario_saiu){
                     if(CheckCollisionRecs(g->hero2.pos, g->hero.bombs[i].pos)){
                         g->hero2.pos.y += h2->speed;
                     }
@@ -337,7 +362,7 @@ void update_hero_pos(Game *g){
             h2->pos.y += h2->speed;
         for(int i = 0; i < g->maps[g->curr_map].num_poder; i++){ 
             if((CheckCollisionRecs(g->hero2.pos,g->maps[g->curr_map].velocidade[i]))){
-                g->hero.speed++;
+                g->hero2.speed++;
                 g->maps[g->curr_map].velocidade[i] = (Rectangle) {0, 0, 0,0};
             } else if ((CheckCollisionRecs(g->hero2.pos, g->maps[g->curr_map].explosao[i]))){
                 for(int j = 0; j < g->hero2.num_bombs; j++){
@@ -369,7 +394,10 @@ void update_hero_pos(Game *g){
         
         for(int i = 0; i < g->hero.num_bombs; i++){
             if(g->hero.bombs[i].isActive == 1){
-                if(fabs(g->hero.bombs[i].time - GetTime()) < 3){
+                if(!CheckCollisionRecs(g->hero2.pos, g->hero.bombs[i].pos)){
+                    g->hero.bombs[i].adversario_saiu = 1;
+                }
+                if(fabs(g->hero.bombs[i].time - GetTime()) < 3 && g->hero.bombs[i].adversario_saiu){
                     if(CheckCollisionRecs(g->hero2.pos, g->hero.bombs[i].pos)){
                         g->hero2.pos.y -= h2->speed;
                     }
@@ -381,7 +409,7 @@ void update_hero_pos(Game *g){
             h2->pos.y -= h2->speed;
         for(int i = 0; i < g->maps[g->curr_map].num_poder; i++){
             if( (CheckCollisionRecs(g->hero2.pos,g->maps[g->curr_map].velocidade[i]))){
-                g->hero.speed++;
+                g->hero2.speed++;
                 g->maps[g->curr_map].velocidade[i] = (Rectangle) {0, 0, 0,0};
             } else if ((CheckCollisionRecs(g->hero2.pos, g->maps[g->curr_map].explosao[i]))){
                 for(int j = 0; j < g->hero2.num_bombs; j++){
@@ -639,8 +667,10 @@ void update_bomb(Game *g, Sound tnt_sound){
                     }
                 }
             }else if(fabs(g->hero.bombs[i].time - GetTime()) > 3){
+                /* Reseta as informações da bomba */
                 g->hero.bombs[i].isActive = 0;
                 g->hero.bombs[i].dono_saiu = 0;
+                g->hero.bombs[i].adversario_saiu = 0;
             }
         }
     }
@@ -882,18 +912,112 @@ void update_bomb(Game *g, Sound tnt_sound){
                     }
                 }
             }else if(fabs(g->hero2.bombs[i].time - GetTime()) > 3){
+                /* Reseta as informações da bomba */
                 g->hero2.bombs[i].isActive = 0;
                 g->hero2.bombs[i].dono_saiu = 0;
+                g->hero2.bombs[i].adversario_saiu = 0;
             }
         }
     }
     g->hero2.put_bomb = 0;
 }
 
+void checkMap2Specials(Game *g){
+    /* Para o Hero 1 */
+    if(CheckCollisionRecs(g->hero.pos, g->maps[1].slow_speed[0]) || CheckCollisionRecs(g->hero.pos, g->maps[1].slow_speed[1])){
+        g->hero.speed = 1;  
+    } else {    
+        g->hero.speed = g->hero.aux_speed;
+    }
+    if(CheckCollisionRecs(g->hero.pos, g->maps[1].insta_death[0]) || CheckCollisionRecs(g->hero.pos, g->maps[1].insta_death[1])){
+        Sound morte = LoadSound("sprites/audio/minecraft-death-sound.mp3");
+        PlaySound(morte);
+        g->hero2.vitorias += 1;
+        g->hero.isAlive = 0;
+    }
+    /* Para o Hero 2 */
+    if(CheckCollisionRecs(g->hero2.pos, g->maps[1].slow_speed[0]) || CheckCollisionRecs(g->hero2.pos, g->maps[1].slow_speed[1])){
+        g->hero2.speed = 1;
+    } else{
+        g->hero2.speed = g->hero2.aux_speed;
+    }
+    if(CheckCollisionRecs(g->hero2.pos, g->maps[1].insta_death[0]) || CheckCollisionRecs(g->hero2.pos, g->maps[1].insta_death[1])){
+        Sound morte = LoadSound("sprites/audio/minecraft-death-sound.mp3");
+        PlaySound(morte);
+        g->hero.vitorias += 1;
+        g->hero2.isAlive = 0;
+    }
+}
+
+void checkMap1Specials(Game *g){
+    int teleporte_aleatoriox = rand() % 12;
+    int teleporte_som = rand() % 2;
+    /* Para o Hero 1 */
+    if(CheckCollisionRecs(g->hero.pos, g->maps[0].teleport[0])){
+        Sound teleporte;
+        if(teleporte_som == 0){
+            teleporte = LoadSound("sprites/audio/teleport1.mp3");
+        } else {
+            teleporte = LoadSound("sprites/audio/teleport2.mp3");
+        }
+        PlaySound(teleporte);
+        int teleporte_aleatorioy = rand() % 6;
+        g->hero.pos.x = teleporte_aleatoriox * 30 + 180;
+        g->hero.pos.y = teleporte_aleatorioy * 60 + 120;
+    }
+    if(CheckCollisionRecs(g->hero.pos, g->maps[0].teleport[1])){
+        Sound teleporte;
+        if(teleporte_som == 0){
+            teleporte = LoadSound("sprites/audio/teleport1.mp3");
+        } else {
+            teleporte = LoadSound("sprites/audio/teleport2.mp3");
+        }
+        PlaySound(teleporte);
+        int teleporte_aleatorioy = rand() % 6;
+        g->hero.pos.x = teleporte_aleatoriox * 30 + 180;
+        g->hero.pos.y = teleporte_aleatorioy * 60 + 120;
+    }
+    /* Para o Hero 2 */
+    if(CheckCollisionRecs(g->hero2.pos, g->maps[0].teleport[0])){
+        Sound teleporte;
+        if(teleporte_som == 0){
+            teleporte = LoadSound("sprites/audio/teleport1.mp3");
+        } else {
+            teleporte = LoadSound("sprites/audio/teleport2.mp3");
+        }
+        PlaySound(teleporte);
+        int teleporte_aleatorioy = rand() % 6;
+        g->hero2.pos.x = teleporte_aleatoriox * 30 + 180;
+        g->hero2.pos.y = teleporte_aleatorioy * 60 + 120;
+    }
+    if(CheckCollisionRecs(g->hero2.pos, g->maps[0].teleport[1])){
+        Sound teleporte;
+        if(teleporte_som == 0){
+            teleporte = LoadSound("sprites/audio/teleport1.mp3");
+        } else {
+            teleporte = LoadSound("sprites/audio/teleport2.mp3");
+        }
+        PlaySound(teleporte);
+        int teleporte_aleatorioy = rand() % 6;
+        g->hero2.pos.x = teleporte_aleatoriox * 30 + 180;
+        g->hero2.pos.y = teleporte_aleatorioy * 60 + 120;
+    }
+}
+
 void UpdateGame(Game *g, Sound tnt_sound)
 {
     update_hero_pos(g);
     update_bomb(g, tnt_sound);
+    if(g->curr_map == 1){
+        if(g->hero.speed != 1)
+            g->hero.aux_speed = g->hero.speed;
+        if(g->hero2.speed != 1)
+            g->hero2.aux_speed = g->hero2.speed;
+        checkMap2Specials(g);
+    }else{
+        checkMap1Specials(g);
+    }
+    
 
     Map *map = &g->maps[g->curr_map];
 }
